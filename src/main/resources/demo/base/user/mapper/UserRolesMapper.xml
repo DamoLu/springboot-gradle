@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.base.user.mapper.UserRolesMapper">
+  <resultMap id="BaseResultMap" type="demo.base.user.pojo.po.UserRoles">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <insert id="insert" parameterType="demo.base.user.pojo.po.UserRoles">
+    insert into user_roles (id, role_id, user_id, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="demo.base.user.pojo.po.UserRoles">
+    insert into user_roles
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="findUserIdListByRoleId" resultType="Long">
+    select user_id from user_roles where role_id = #{roleId}
+  </select>
+
+  <select id="getRoleNameListByUserId" resultType="String">
+    select
+      r.role as role
+    from
+      users as u
+      left join user_roles as ur
+      on u.user_id = ur.user_id
+      left join roles as r
+      on ur.role_id = r.role_id
+    where
+      u.user_id = #{userId}
+  </select>
+</mapper>
